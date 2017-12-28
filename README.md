@@ -48,8 +48,6 @@ Mac OS X Build Instructions and Notes
 =====================================
 See (doc/build-osx.md) for instructions on building on Mac OS X.
 
-
-
 Windows (64/32 bit) Build Instructions and Notes
 =====================================
 See (doc/build-windows.md) for instructions on building on Windows 64/32 bit.
