@@ -20,9 +20,9 @@ Dependencies
 
 NOTE: Building with Qt4 is still supported, however, could result in a broken UI. Building with Qt5 is recommended.
 
-Build Zcoin Core
+Build krypteia Core
 ------------------------
-1.  Build Zcoin-core:
+1.  Build krypteia-core:
 
     Configure and build the headless bitcoin binaries as well as the GUI (if Qt is found).
 
@@ -44,26 +44,26 @@ Build Zcoin Core
 Running
 -------
 
-Zcoin Core is now available at `./src/zcoind`
+krypteia Core is now available at `./src/krypteiad`
 
 Before running, it's recommended you create an RPC configuration file.
 
-    echo -e "rpcuser=bitcoinrpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/zcoin/zcoin.conf"
+    echo -e "rpcuser=bitcoinrpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/krypteia/krypteia.conf"
 
-    chmod 600 "/Users/${USER}/Library/Application Support/zcoin/zcoin.conf"
+    chmod 600 "/Users/${USER}/Library/Application Support/krypteia/krypteia.conf"
 
-The first time you run zcoind, it will start downloading the blockchain. This process could take several hours.
+The first time you run krypteiad, it will start downloading the blockchain. This process could take several hours.
 
 You can monitor the download process by looking at the debug.log file:
 
-    tail -f $HOME/Library/Application\ Support/zcoin/debug.log
+    tail -f $HOME/Library/Application\ Support/krypteia/debug.log
 
 Other commands:
 -------
 
-    ./src/zcoind -daemon # Starts the zcoin daemon.
-    ./src/zcoin-cli --help # Outputs a list of command-line options.
-    ./src/zcoin-cli help # Outputs a list of RPC commands when the daemon is running.
+    ./src/krypteiad -daemon # Starts the krypteia daemon.
+    ./src/krypteia-cli --help # Outputs a list of command-line options.
+    ./src/krypteia-cli help # Outputs a list of RPC commands when the daemon is running.
 
 Using Qt Creator as IDE
 ------------------------

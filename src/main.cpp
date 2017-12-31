@@ -62,7 +62,7 @@
 using namespace std;
 
 #if defined(NDEBUG)
-# error "Zcoin cannot be compiled without assertions."
+# error "krypteia cannot be compiled without assertions."
 #endif
 
 #define ZEROCOIN_MODULUS   "25195908475657893494027183240048398571429282126204032027777137836043662020707595556264018525880784406918290641249515082189298559149176184502808489120072844992687392807287776735971418347270261896375014971824691165077613379859095700097330459748808428401797429100642458691817195118746121515172654632282216869987549182422433637259085141865462043576798423387184774447920739934236584823824281198163815010674810451660377306056201619676256133844143603833904414952634432190114657544454178424020924616515723350778707749817125772467962926386356373289912154831438167899885040445364023527381951378636564391212010397122822120720357"
@@ -137,7 +137,7 @@ static void CheckBlockIndex(const Consensus::Params &consensusParams);
 /** Constant stuff for coinbase transactions we create: */
 CScript COINBASE_FLAGS;
 
-const string strMessageMagic = "Zcoin Signed Message:\n";
+const string strMessageMagic = "krypteia Signed Message:\n";
 
 // Internal stuff
 namespace {
@@ -1109,14 +1109,14 @@ bool setParams = bnTrustedModulus.SetHexBool(ZEROCOIN_MODULUS);
 uint32_t securityLevel = 80;
 static libzerocoin::Params *ZCParams = new libzerocoin::Params(bnTrustedModulus);
 
-bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx, list <CZerocoinEntry> listPubCoin,
+bool CheckSpendkrypteiaTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx, list <CZerocoinEntry> listPubCoin,
                                 libzerocoin::CoinDenomination targetDenomination, CValidationState &state,
                                 uint256 hashTx, bool isVerifyDB, int nHeight, bool isCheckWallet) {
     // Check vOut
     // Only one loop, we checked on the format before enter this case
     // Check vIn
     CWalletDB walletdb(pwalletMain->strWalletFile);
-    LogPrintf("CheckSpendZcoinTransaction denomination=%d nHeight=%d\n", targetDenomination, nHeight);
+    LogPrintf("CheckSpendkrypteiaTransaction denomination=%d nHeight=%d\n", targetDenomination, nHeight);
     BOOST_FOREACH(
     const CTxIn &txin, tx.vin)
     {
@@ -1204,7 +1204,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
 
             if (!passVerify) {
                 int countPubcoin = 0;
-//                LogPrint("CheckSpendZcoinTransaction", "Check reverse\n");
+//                LogPrint("CheckSpendkrypteiaTransaction", "Check reverse\n");
                 BOOST_REVERSE_FOREACH(
                 const CZerocoinEntry &pubCoinItem, listPubCoin) {
 //                    LogPrintf("--denomination = %d, id = %d, pubcoinId = %d height = %d\n",
@@ -1212,7 +1212,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
                     if (pubCoinItem.denomination == targetDenomination &&
                         (pubCoinItem.id >= 0 && (uint32_t) pubCoinItem.id == pubcoinId) &&
                         pubCoinItem.nHeight != -1) {
-                        LogPrint("CheckSpendZcoinTransaction",
+                        LogPrint("CheckSpendkrypteiaTransaction",
                                  "--## denomination = %d, id = %d, pubcoinId = %d height = %d\n",
                                  pubCoinItem.denomination, pubCoinItem.id, pubcoinId,
                                  pubCoinItem.nHeight);
@@ -1283,7 +1283,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
                                     pubCoinTx.id = pubCoinItem.id;
                                     walletdb.WriteZerocoinEntry(pubCoinTx);
                                     // Update UI wallet
-                                    // LogPrint("CheckSpendZcoinTransaction", "pubcoin=%s, isUsed=Used\n", pubCoinItem.value.GetHex());
+                                    // LogPrint("CheckSpendkrypteiaTransaction", "pubcoin=%s, isUsed=Used\n", pubCoinItem.value.GetHex());
                                     pwalletMain->NotifyZerocoinChanged(pwalletMain, pubCoinItem.value.GetHex(), "Used",
                                                                        CT_UPDATED);
                                     break;
@@ -1492,7 +1492,7 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
         // Check Mint Zerocoin Transaction
         BOOST_FOREACH(const CTxOut &txout, tx.vout) {
             if (!txout.scriptPubKey.empty() && txout.scriptPubKey.IsZerocoinMint()) {
-                LogPrintf("CheckMintZcoinTransaction txHash = %s, isVerifyDB = %d\n", txout.GetHash().ToString(),
+                LogPrintf("CheckMintkrypteiaTransaction txHash = %s, isVerifyDB = %d\n", txout.GetHash().ToString(),
                           isVerifyDB);
                 LogPrintf("nValue = %d\n", txout.nValue);
                 vector<unsigned char> vchZeroMint;
@@ -1587,31 +1587,31 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
                     listPubCoin.sort(CompHeight);
                     if (txout.nValue == libzerocoin::ZQ_LOVELACE * COIN) {
                         // Check vIn
-                        if (!CheckSpendZcoinTransaction(tx, pubCoinTx, listPubCoin, libzerocoin::ZQ_LOVELACE, state,
+                        if (!CheckSpendkrypteiaTransaction(tx, pubCoinTx, listPubCoin, libzerocoin::ZQ_LOVELACE, state,
                                                         hashTx, isVerifyDB, nHeight, isCheckWallet)) {
                             return state.DoS(100,
                                              error("CTransaction::CheckTransaction() : COIN SPEND TX IN ZQ_LOVELACE DID NOT VERIFY!"));
                         };
                     } else if (txout.nValue == libzerocoin::ZQ_GOLDWASSER * COIN) {
-                        if (!CheckSpendZcoinTransaction(tx, pubCoinTx, listPubCoin, libzerocoin::ZQ_GOLDWASSER, state,
+                        if (!CheckSpendkrypteiaTransaction(tx, pubCoinTx, listPubCoin, libzerocoin::ZQ_GOLDWASSER, state,
                                                         hashTx, isVerifyDB, nHeight, isCheckWallet)) {
                             return state.DoS(100,
                                              error("CTransaction::CheckTransaction() : COIN SPEND TX IN ZQ_GOLDWASSER DID NOT VERIFY!"));
                         };
                     } else if (txout.nValue == libzerocoin::ZQ_RACKOFF * COIN) {
-                        if (!CheckSpendZcoinTransaction(tx, pubCoinTx, listPubCoin, libzerocoin::ZQ_RACKOFF, state,
+                        if (!CheckSpendkrypteiaTransaction(tx, pubCoinTx, listPubCoin, libzerocoin::ZQ_RACKOFF, state,
                                                         hashTx, isVerifyDB, nHeight, isCheckWallet)) {
                             return state.DoS(100,
                                              error("CTransaction::CheckTransaction() : COIN SPEND TX IN ZQ_RACKOFF DID NOT VERIFY!"));
                         };
                     } else if (txout.nValue == libzerocoin::ZQ_PEDERSEN * COIN) {
-                        if (!CheckSpendZcoinTransaction(tx, pubCoinTx, listPubCoin, libzerocoin::ZQ_PEDERSEN, state,
+                        if (!CheckSpendkrypteiaTransaction(tx, pubCoinTx, listPubCoin, libzerocoin::ZQ_PEDERSEN, state,
                                                         hashTx, isVerifyDB, nHeight, isCheckWallet)) {
                             return state.DoS(100,
                                              error("CTransaction::CheckTransaction() : COIN SPEND TX IN ZQ_PEDERSEN DID NOT VERIFY!"));
                         };
                     } else if (txout.nValue == libzerocoin::ZQ_WILLIAMSON * COIN) {
-                        if (!CheckSpendZcoinTransaction(tx, pubCoinTx, listPubCoin, libzerocoin::ZQ_WILLIAMSON, state,
+                        if (!CheckSpendkrypteiaTransaction(tx, pubCoinTx, listPubCoin, libzerocoin::ZQ_WILLIAMSON, state,
                                                         hashTx, isVerifyDB, nHeight, isCheckWallet)) {
                             return state.DoS(100,
                                              error("CTransaction::CheckTransaction() : COIN SPEND TX IN ZQ_WILLIAMSON DID NOT VERIFY!"));
@@ -2261,7 +2261,7 @@ bool ReadBlockFromDisk(CBlock &block, const CDiskBlockPos &pos, int nHeight, con
     }
     // Check the header
     if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams))
-        return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
+        return error("ReadBlockFromDisk: Errors in block header at %s , %s , %s", pos.ToString(), block.nBits, block.nNonce);
     return true;
 }
 
@@ -2892,7 +2892,7 @@ static int64_t nTimeTotal = 0;
 
 bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pindex, CCoinsViewCache &view,
                   const CChainParams &chainparams, bool fJustCheck) {
-    //btzc: zcoin code
+    //btzc: krypteia code
 //    if (BlockMerkleBranch(block).size() <=0) {
 //        return false;
 //    };
@@ -3778,9 +3778,9 @@ void ReprocessBlocks(int nBlocks) {
  * Connect a new ZCblock to chainActive. pblock is either NULL or a pointer to a CBlock
  * corresponding to pindexNew, to bypass loading it again from disk.
  */
-bool static ReArrangeZcoinMint(CValidationState &state, const CChainParams &chainparams, CBlockIndex *pindexNew,
+bool static ReArrangekrypteiaMint(CValidationState &state, const CChainParams &chainparams, CBlockIndex *pindexNew,
                                const CBlock *pblock) {
-//    LogPrintf("[ReArrangeZcoinMint]\n");
+//    LogPrintf("[ReArrangekrypteiaMint]\n");
     CBlock block;
     if (!pblock) {
         if (!ReadBlockFromDisk(block, pindexNew, chainparams.GetConsensus()))
@@ -3946,7 +3946,7 @@ static bool ActivateBestChainStep(CValidationState &state, const CChainParams &c
     int nHeight = pindexFork ? pindexFork->nHeight : -1;
     // Build list of new blocks to connect.
     std::vector < CBlockIndex * > vpindexToConnect;
-    //btzc: add zcoin code
+    //btzc: add krypteia code
     std::vector < CBlockIndex * > vpindexToConnectZC;
     bool fContinue = true;
 //    LogPrintf("[ActivateBestChainStep] fContinue=%d, nHeight=%d, pindexMostWork->nHeight=%d\n", fContinue, nHeight, pindexMostWork->nHeight);
@@ -3956,7 +3956,7 @@ static bool ActivateBestChainStep(CValidationState &state, const CChainParams &c
         int nTargetHeight = std::min(nHeight + 32, pindexMostWork->nHeight);
         vpindexToConnect.clear();
         vpindexToConnect.reserve(nTargetHeight - nHeight);
-        //btzc: add zcoin code
+        //btzc: add krypteia code
         vpindexToConnectZC.clear();
         CBlockIndex *pindexIter = pindexMostWork->GetAncestor(nTargetHeight);
         while (pindexIter && pindexIter->nHeight != nHeight) {
@@ -3996,7 +3996,7 @@ static bool ActivateBestChainStep(CValidationState &state, const CChainParams &c
         }
         BOOST_FOREACH(CBlockIndex * pindexConnect, vpindexToConnectZC)
         {
-            ReArrangeZcoinMint(state, chainparams, pindexConnect, pindexConnect == pindexMostWork ? pblock : NULL);
+            ReArrangekrypteiaMint(state, chainparams, pindexConnect, pindexConnect == pindexMostWork ? pblock : NULL);
         }
     }
 
@@ -4056,9 +4056,9 @@ int getNHeight(const CBlockHeader &block) {
  */
 bool ActivateBestChain(CValidationState &state, const CChainParams &chainparams, const CBlock *pblock) {
     LogPrintf("ActivateBestChain()\n");
-//    if (pblock) {
-//        LogPrint("ActivateBestChain", "block=%s\n", pblock->ToString());
-//    }
+    if (pblock) {
+        LogPrint("ActivateBestChain", "block=%s\n", pblock->ToString());
+    }
     CBlockIndex *pindexMostWork = NULL;
     CBlockIndex *pindexNewTip = NULL;
     do {
@@ -4515,14 +4515,14 @@ bool CheckBlock(const CBlock &block, CValidationState &state, const Consensus::P
                         instantsend.Relay(hashLocked);
                         LOCK(cs_main);
                         mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-                        return state.DoS(0, error("CheckBlock(XZC): transaction %s conflicts with transaction lock %s",
+                        return state.DoS(0, error("CheckBlock(KRT): transaction %s conflicts with transaction lock %s",
                                                   tx.GetHash().ToString(), hashLocked.ToString()),
                                          REJECT_INVALID, "conflict-tx-lock");
                     }
                 }
             }
         } else {
-            LogPrintf("CheckBlock(XZC): spork is off, skipping transaction locking checks\n");
+            LogPrintf("CheckBlock(KRT): spork is off, skipping transaction locking checks\n");
         }
 
         // Check transactions
@@ -6934,7 +6934,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             BOOST_FOREACH(uint256
             hash, vEraseQueue)
             EraseOrphanTx(hash);
-            //btzc: zcoin condition
+            //btzc: krypteia condition
         } else if (!AlreadyHave(inv) && tx.IsZerocoinSpend() && AcceptToMemoryPool(mempool, state, tx, false, true, &fMissingInputsZerocoin, false, 0, true)) {
             RelayTransaction(tx);
 //            LogPrint("mempool", "AcceptToMemoryPool: peer=%d: accepted %s (poolsz %u txn, %u kB)\n",

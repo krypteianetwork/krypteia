@@ -4,13 +4,13 @@
 *.tar.gz
 
 *.exe
-src/zcoin
-src/zcoind
-src/zcoin-cli
-src/zcoin-tx
-src/test/test_zcoin
-src/test/test_zcoin_fuzzy
-src/qt/test/test_zcoin-qt
+src/krypteia
+src/krypteiad
+src/krypteia-cli
+src/krypteia-tx
+src/test/test_krypteia
+src/test/test_krypteia_fuzzy
+src/qt/test/test_krypteia-qt
 
 # autoreconf
 Makefile.in
@@ -77,12 +77,12 @@ src/qt/test/moc*.cpp
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-zcoin-qt
-Zcoin-Qt.app
+krypteia-qt
+krypteia-Qt.app
 
 # Unit-tests
 Makefile.test
-zcoin-qt_test
+krypteia-qt_test
 
 # Resources cpp
 qrc_*.cpp
@@ -95,7 +95,7 @@ build
 *.gcno
 *.gcda
 /*.info
-test_zcoin.coverage/
+test_krypteia.coverage/
 total.coverage/
 coverage_percent.txt
 
@@ -110,5 +110,5 @@ test/cache/*
 
 /doc/doxygen/
 
-libzcoinconsensus.pc
+libkrypteiaconsensus.pc
 contrib/devtools/split-debug.sh

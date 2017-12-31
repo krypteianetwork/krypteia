@@ -85,6 +85,8 @@ protected:
     CChainParams() {}
 
     Consensus::Params consensus;
+    int hashGenesisBlock;
+    uint64_t hashBo;
     CMessageHeader::MessageStartChars pchMessageStart;
     int nDefaultPort;
     uint64_t nPruneAfterHeight;
